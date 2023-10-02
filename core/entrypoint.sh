@@ -8,8 +8,8 @@ echo 'Apply collectstatic'
 
 python manage.py collectstatic
 
-echo 'Apply spectacular schema'
+# echo 'Apply spectacular schema'
 
-python manage.py spectacular --color --file schema.yml
+# python manage.py spectacular --color --file schema.yml
 
 exec "$@"
