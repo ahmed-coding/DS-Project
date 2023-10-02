@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  coreapis:
+    container_name: ds-coreAPIs
+    build: 
+      context: ./core
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./core:/usr/src/app/ds-project/ds-core/
+    ports:
+      - 8010:8000
+    environment:
+      - DEBUG=true
+    
