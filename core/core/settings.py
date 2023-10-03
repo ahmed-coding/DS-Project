@@ -97,10 +97,27 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.contrib.gis.db.backends.postgis',
+    #     'USER': 'postgres',
+    #     'NAME': 'DS',
+    #     'HOST': 'localhost',
+    #     'PORT': '5435',
+    #     'PASSWORD': '12345',
+    #     'TEST': {
+    #             'NAME': 'mytestdatabase',
+    #     },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'USER': 'postgres',
+        'NAME': 'DS',
+        'HOST': 'localhost',
+        'PORT': '5435',
+        'PASSWORD': '12345',
+        'TEST': {
+                'NAME': 'mytestdatabase',
+        },
+    },
 }
 
 CHANNEL_LAYERS = {

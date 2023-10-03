@@ -10,12 +10,27 @@ services:
     networks:
       - DS
 
+  postgres:
+    build:
+      context: ./core
+      dockerfile: Dockerfile.postgis
+    container_name: ds-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: DS
+    ports:
+      - "5435:5432"  # Map PostgreSQL port to host
+    networks:
+      - DS
+    command: ["postgres", "-c", "log_statement=all"]  # Optional: Enable statement logging
 
   coreapis:
     container_name: ds-coreAPIs
     build: 
       context: ./core
-    command: python manage.py runserver 0.0.0.0:8000
+    command: uvicorn core.asgi:application --port 8000 --workers 4 --log-level debug --reload
+
     volumes:
       - ./core:/usr/src/app/ds-project/ds-core/
     ports:
@@ -24,6 +39,7 @@ services:
       - DEBUG=true
     depends_on:
       - redis
+      - postgres  # Add PostgreSQL as a dependency
     networks:
       - DS
 
@@ -38,6 +54,7 @@ services:
       - DEBUG=true
     depends_on:
       - redis
+      - postgres  # Add PostgreSQL as a dependency
     networks:
       - DS
     

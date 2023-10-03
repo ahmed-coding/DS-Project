@@ -9,7 +9,10 @@ RUN pip install --upgrade pip
 
 # Install system dependencies
 RUN apk update && \
-    apk add --no-cache postgresql-dev python3-dev musl-dev py3-gdal
+    apk add --no-cache build-base linux-headers musl-dev && \
+    apk add --no-cache gdal-dev geos-dev postgresql-dev && \ 
+    rm -rf /var/cache/apk/*
+
 
 COPY ./requirements.txt /usr/src/app/ds-project/ds-core/requirements.txt
 
