@@ -31,7 +31,7 @@ services:
     container_name: ds-celery
     build: 
       context: ./core
-    command: python manage.py runserver 0.0.0.0:8001
+    command: celery --app=coreCelery worker -l INFO
     volumes:
       - ./core:/usr/src/app/ds-project/ds-core/
     environment:

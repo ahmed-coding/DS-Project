@@ -6,7 +6,7 @@ python manage.py migrate
 
 echo 'Apply collectstatic'
 
-python manage.py collectstatic
+# python manage.py collectstatic -yes
 
 # echo 'Apply spectacular schema'
 
