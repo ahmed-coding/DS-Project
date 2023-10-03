@@ -32,14 +32,30 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # apps
-    'apps'
+    # internl apps
+    'apps',
+    # GIS and GeoDjango
+    'django.contrib.gis',  # For Test GIS
+    'rest_framework_gis',
+    # external apps
+    'corsheaders',
+    'mptt',
+    'rest_framework',
+    'user_agents',
+    'channels',
+    # 'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt',
+    'drf_spectacular',
+
+
 ]
 
 MIDDLEWARE = [
@@ -50,6 +66,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'  # ,
+
 
 
 ]
@@ -59,7 +77,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'apps/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,6 +101,15 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
 }
 
 
@@ -122,11 +149,69 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static/",
+
+]
+STATIC_ROOT = BASE_DIR / 'assets/'
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Settings for Email
+EMAIL_HOST = 'smtp.titan.email'
+EMAIL_USE_SSL = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'do-not-reply@ymall-ye.com'
+EMAIL_HOST_PASSWORD = 'Yyyy7724!'
+DEFUALT_FROM_EMAIL = EMAIL_HOST_USER
+# End settings for Email
+
+
+# Rest_framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+
+    ),
+    'DEFAULT_PERMISSINS_CLASSES': ("rest_framework.permissions.IsAuthenticated",),
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+}
+
+CORS_ORIGIN_ALLOW_ALL = True  # -> Cors Header
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:8000',
+#     'http://192.168.1.100:8080',
+# )
+
+
+# Google
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+
+
+# SPECTACULAR Swagger documentation settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': ' API Documentation with Swagger UI for Ecommerce',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+    # OTHER SETTINGS
+}
+
+
+# Celery settings
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get(
     "CELERY_BACKEND", "redis://redis:6379/0")

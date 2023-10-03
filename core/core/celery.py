@@ -1,7 +1,7 @@
 from celery import Celery
 import os
 import sys
-sys.path.append('/usr/src/app/ds-project/ds-core')  # Adjust the path as needed
+# sys.path.append('/usr/src/app/ds-project/ds-core')  # Adjust the path as needed
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 

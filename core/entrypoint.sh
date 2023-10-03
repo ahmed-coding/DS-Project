@@ -6,10 +6,9 @@ python manage.py migrate
 
 echo 'Apply collectstatic'
 
-# python manage.py collectstatic -yes
+python manage.py collectstatic --noinput
+echo 'Apply spectacular schema'
 
-# echo 'Apply spectacular schema'
-
-# python manage.py spectacular --color --file schema.yml
+python manage.py spectacular --color --file schema.yml
 
 exec "$@"
