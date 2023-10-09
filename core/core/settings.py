@@ -66,10 +66,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'  # ,
-
-
-
+    'corsheaders.middleware.CorsMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',#
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -91,32 +89,33 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+ASGI_APPLICATION = "core.asgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.contrib.gis.db.backends.postgis',
-    #     'USER': 'postgres',
-    #     'NAME': 'DS',
-    #     'HOST': 'localhost',
-    #     'PORT': '5435',
-    #     'PASSWORD': '12345',
-    #     'TEST': {
-    #             'NAME': 'mytestdatabase',
-    #     },
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'USER': 'postgres',
         'NAME': 'DS',
-        'HOST': 'localhost',
+        'HOST': 'postgres',
         'PORT': '5432',
         'PASSWORD': '12345',
         'TEST': {
                 'NAME': 'mytestdatabase',
         },
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.postgresql',
+        #     'USER': 'postgres',
+        #     'NAME': 'DS',
+        #     'HOST': 'localhost',
+        #     'PORT': '5432',
+        #     'PASSWORD': '12345',
+        #     'TEST': {
+        #             'NAME': 'mytestdatabase',
+        #     },
     },
 }
 
@@ -124,7 +123,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("localhost", 6379)],
+            "hosts": [("0.0.0.0", 6379)],
         },
     },
 }
@@ -164,12 +163,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static/",
 
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 STATIC_ROOT = BASE_DIR / 'assets/'
 
 
