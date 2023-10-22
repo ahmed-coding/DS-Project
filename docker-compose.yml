@@ -10,8 +10,6 @@ services:
     networks:
       - DS
 
-
-
   postgres:
     build:
       context: ./core
@@ -48,7 +46,7 @@ services:
     container_name: ds-celery
     build: 
       context: ./core
-    command: celery --app=core worker -l INFO
+    command: celery --app=core worker -l INFO -B
     volumes:  
       - ./core:/usr/src/app/ds-project/ds-core/
     environment:
@@ -67,3 +65,12 @@ services:
       - 15672:15672
     networks:
       - DS
+  flower:
+    image: mher/flower
+    container_name: ds-flower
+    ports:
+      - 5555:5555
+    networks:
+      - DS
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672/
