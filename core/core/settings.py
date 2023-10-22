@@ -119,15 +119,6 @@ DATABASES = {
     },
 }
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("0.0.0.0", 6379)],
-        },
-    },
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -228,8 +219,24 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
+# Channels settings
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("ds-redis", 6379)],
+        },
+    },
+}
 
-# Celery settings
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+
+# # Celery settings with redis
+# CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+# CELERY_RESULT_BACKEND = os.environ.get(
+#     "CELERY_BACKEND", "redis://redis:6379/0")
+
+# Celery settings with rabbitmq
+CELERY_BROKER_URL = os.environ.get(
+    "CELERY_BROKER", "amqp://guest:guest@rabbitmq:5672/")
 CELERY_RESULT_BACKEND = os.environ.get(
     "CELERY_BACKEND", "redis://redis:6379/0")

@@ -10,6 +10,8 @@ services:
     networks:
       - DS
 
+
+
   postgres:
     build:
       context: ./core
@@ -56,4 +58,12 @@ services:
       - postgres  # Add PostgreSQL as a dependency
     networks:
       - DS
-    
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: ds-rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - DS
