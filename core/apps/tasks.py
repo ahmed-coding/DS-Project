@@ -4,4 +4,4 @@ from celery import shared_task
 
 @shared_task
 def shardTeskTest():
-    return
+    return {"Key": 5555}
