@@ -33,7 +33,7 @@ services:
     volumes:
       - ./core:/usr/src/app/ds-project/ds-core/
     ports:
-      - 8001:8000
+      - 8005:8001
     environment:
       - DEBUG=true
     depends_on:
