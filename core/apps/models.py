@@ -253,6 +253,9 @@ class User_address(models.Model):
         "user"), on_delete=models.PROTECT, blank=True, related_name='user_address')
     is_active = models.BooleanField(default=False)
 
+    class Meta:
+        db_table = 'User_address'
+
 
 class Notification(models.Model):
     title = models.CharField(_("Title"), max_length=50)
