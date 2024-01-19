@@ -645,6 +645,25 @@ class Rate(models.Model):
         return f"id:{self.id} | user-id:{self.user.id} | item-id:{self.item.id}"
 
 
+class Package(models.Model):
+    item_price = models.DecimalField(
+        _("item_price"), default=0.0, decimal_places=20)
+    bar_code = models.CharField(_("bar_code"), max_length=50)
+    weight = models.FloatField(_("weight"))
+    length = models.FloatField(_("length"))
+    width = models.FloatField(_("width"))
+    dilevery_cost = models.FloatField(_("dilevery_cost"))
+    order = models.ForeignKey("Order", verbose_name=_(
+        "order"), on_delete=models.CASCADE, related_name='package')
+
+    def __str__(self) -> str:
+        return f"{self.order} "
+
+    class Meta:
+        db_table = 'Package'
+        unique_together = ("driver", "order")
+
+
 class Package_catalog(models.Model):
     status_name = models.CharField(_("status_name"), max_length=20)
 
