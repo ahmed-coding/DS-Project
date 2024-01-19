@@ -569,3 +569,193 @@ class Item_option(models.Model):
     class Meta:
         db_table = 'Item_option'
         unique_together = ("item", "variation_option")
+
+
+class Stuck(models.Model):
+    """
+    OneToOne with Product_item
+
+    Args:
+        item => it's Product_item
+    """
+    stuck_type = models.CharField(_("stuck_type"), max_length=50)
+    item = models.OneToOneField(
+        Product_item, on_delete=models.CASCADE, related_name='stock')
+
+    def __str__(self):
+        return f'id:{self.id} - item-id:{self.item.id} '
+
+    class Meta:
+        db_table = 'Stuck'
+
+
+class Favorite(models.Model):
+    """
+    Favorite model <ManyTOMany> betowen User and Prodect
+    """
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='favorites')
+    item = models.ForeignKey(
+        Product_item, on_delete=models.CASCADE, related_name='favorites')
+    time_created = models.DateField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"Product- {self.item.id } - User- {self.user.id}"
+
+    class Meta:
+        db_table = 'Favorite'
+        unique_together = ("item", "user")
+
+
+class Cart(models.Model):
+    """
+    Cart model MAnyToMany betowen User and Prodect
+    it contains count for number product witsh in Cart
+    item => it's Product_item
+    """
+    item = models.ForeignKey(
+        Product_item, on_delete=models.CASCADE, related_name='item_Cart')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, related_name='user_cart')
+    count = models.IntegerField(default=1, blank=True)
+    time_created = models.DateField(auto_now_add=True)
+
+    def __str__(self) -> str:
+
+        return f"Product- {self.item.id } - User- {self.user.id} - cart-id:{self.id} "
+
+    class Meta:
+        db_table = 'Cart'
+        unique_together = ("item", "user")
+
+
+class Rate(models.Model):
+    rating_date = models.DateField(auto_now_add=True)
+    rating = models.FloatField()
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='rate')
+    item = models.ForeignKey(
+        Product_item, on_delete=models.CASCADE, related_name='rate')
+
+    class Meta:
+        db_table = 'Rate'
+        unique_together = ("item", "user")
+
+    def __str__(self):
+        return f"id:{self.id} | user-id:{self.user.id} | item-id:{self.item.id}"
+
+
+class Package_catalog(models.Model):
+    status_name = models.CharField(_("status_name"), max_length=20)
+
+    def __str__(self) -> str:
+        return str(f"status_name: {self.status_name}")
+
+    class Meta:
+        db_table = 'Package_catalog'
+
+
+class Package_status(models.Model):
+    """
+            Package_status model ManyToMany betowen dilevery and package
+
+
+    Args:
+        models (_type_): _description_
+    """
+    package_status_note = models.TextField(_("package_status_note"))
+    status_time = models.DateTimeField(
+        _("status_time"), auto_now_add=True)
+    package = models.ForeignKey(Package, verbose_name=_(
+        "package"), on_delete=models.CASCADE, related_name='package_status')
+    package_catalog = models.ForeignKey(Package_catalog, verbose_name=_(
+        "package_catalog"), on_delete=models.CASCADE, related_name='package_status')
+
+    def __str__(self) -> str:
+        return str(f"package: {self.package} - package catalog: {self.package_catalog}")
+
+    class Meta:
+        db_table = 'Package_status'
+        unique_together = ("package", "package_catalog")
+
+
+class Payment_type(models.Model):
+    payment_type_name = models.CharField(_("payment_type_name"), max_length=50)
+
+    def __str__(self) -> str:
+
+        return f"{self.payment_type_name} "
+
+    class Meta:
+        db_table = 'Payment_type'
+
+
+class Payment(models.Model):
+    payment_provider = models.CharField(_("payment_provider"), max_length=50)
+    payment_date = models.DateTimeField(
+        _("payment_date"), auto_now=False, auto_now_add=True)
+    payment_type = models.ForeignKey(Payment_type, verbose_name=_(
+        "payment_type"), on_delete=models.CASCADE, related_name='payment')
+    date = models.DateTimeField(
+        _("Date"), auto_now=False, auto_now_add=True)
+
+    def __str__(self) -> str:
+        return str(f"Driver: {self.payment_provider} - payment type: {self.payment_type} - payment date: {self.payment_date}")
+
+    class Meta:
+        db_table = 'Payment'
+
+
+class Payment_details(models.Model):
+    """
+
+    Args:
+        models (_type_): _description_
+    """
+    value = models.FloatField(_("value"))
+    order = models.ForeignKey(
+        "Order", verbose_name=_("order"), on_delete=models.CASCADE, related_name='payment_details')
+    payment = models.ForeignKey(Payment, verbose_name=_(
+        "payment"), on_delete=models.CASCADE, related_name='payment_details')
+
+    def __str__(self) -> str:
+        return str(f"payment: {self.payment} - order:{self.order}")
+
+    class Meta:
+        db_table = 'Payment_details'
+        unique_together = ("order", "payment")
+
+
+class Order_type(models.Model):
+    type_name = models.CharField(_("type_name"), max_length=50)
+
+    def __str__(self) -> str:
+
+        return f"{self.type_name} "
+
+    class Meta:
+        db_table = 'Order_type'
+
+
+class Order(models.Model):
+    order_date = models.DateTimeField(
+        _("order_date"), auto_now_add=True)
+    discount = models.FloatField(_("discount"))
+    packages_price = models.FloatField(_("packages_price"))
+    address_shipping = models.ForeignKey(Region, verbose_name=_(
+        "address_shipping"), on_delete=models.CASCADE, related_name='order_address_shipping')
+    address_billing = models.ForeignKey(Region, verbose_name=_(
+        "address_billing"), on_delete=models.CASCADE, related_name='order_address_billing')
+    payment_type = models.ForeignKey(Payment_type, verbose_name=_(
+        "payment_type"), on_delete=models.CASCADE, related_name='order')
+    user = models.ForeignKey(User, verbose_name=_(
+        "user"), on_delete=models.CASCADE, related_name='order')
+    order_type = models.ForeignKey('Order_type', verbose_name=_(
+        "order_type"), on_delete=models.CASCADE, related_name='order')
+
+    def __str__(self) -> str:
+
+        return f"id: {self.pk}/ {self.user.name} - {self.order_type.type_name}"
+
+    class Meta:
+        db_table = 'Order'
