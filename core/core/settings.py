@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
+    # 'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -96,26 +96,26 @@ ASGI_APPLICATION = "core.asgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.contrib.gis.db.backends.postgis',
+    #     'USER': 'postgres',
+    #     'NAME': 'DS',
+    #     'HOST': 'postgres',
+    #     'PORT': '5432',
+    #     'PASSWORD': '12345',
+    #     'TEST': {
+    #             'NAME': 'mytestdatabase',
+    #     },
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'USER': 'postgres',
         'NAME': 'DS',
-        'HOST': 'postgres',
+        'HOST': 'localhost',
         'PORT': '5432',
         'PASSWORD': '12345',
         'TEST': {
                 'NAME': 'mytestdatabase',
         },
-        # 'default': {
-        #     'ENGINE': 'django.db.backends.postgresql',
-        #     'USER': 'postgres',
-        #     'NAME': 'DS',
-        #     'HOST': 'localhost',
-        #     'PORT': '5432',
-        #     'PASSWORD': '12345',
-        #     'TEST': {
-        #             'NAME': 'mytestdatabase',
-        #     },
     },
 }
 
@@ -160,7 +160,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static/",
 
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_ROOT = BASE_DIR / 'assets/'
 
@@ -231,12 +231,12 @@ CHANNEL_LAYERS = {
 
 
 # # Celery settings with redis
-# CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-# CELERY_RESULT_BACKEND = os.environ.get(
-#     "CELERY_BACKEND", "redis://redis:6379/0")
-
-# Celery settings with rabbitmq
-CELERY_BROKER_URL = os.environ.get(
-    "CELERY_BROKER", "amqp://guest:guest@rabbitmq:5672/")
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get(
     "CELERY_BACKEND", "redis://redis:6379/0")
+
+# Celery settings with rabbitmq
+# CELERY_BROKER_URL = os.environ.get(
+#     "CELERY_BROKER", "amqp://guest:guest@rabbitmq:5672/")
+# CELERY_RESULT_BACKEND = os.environ.get(
+#     "CELERY_BACKEND", "redis://redis:6379/0")
