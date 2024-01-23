@@ -16,6 +16,8 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+AUTH_USER_MODEL = 'apps.User'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -32,7 +34,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'daphne',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -117,6 +119,10 @@ DATABASES = {
                 'NAME': 'mytestdatabase',
         },
     },
+    #     'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
 }
 
 
@@ -220,20 +226,20 @@ SPECTACULAR_SETTINGS = {
 }
 
 # Channels settings
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis", 6379)],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("redis", 6379)],
+#         },
+#     },
+# }
 
 
 # # Celery settings with redis
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get(
-    "CELERY_BACKEND", "redis://redis:6379/0")
+# CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+# CELERY_RESULT_BACKEND = os.environ.get(
+#     "CELERY_BACKEND", "redis://redis:6379/0")
 
 # Celery settings with rabbitmq
 # CELERY_BROKER_URL = os.environ.get(

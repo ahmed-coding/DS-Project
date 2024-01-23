@@ -647,7 +647,7 @@ class Rate(models.Model):
 
 class Package(models.Model):
     item_price = models.DecimalField(
-        _("item_price"), default=0.0, decimal_places=20)
+        _("item_price"), default=0.0,decimal_places=2, max_digits=16)
     bar_code = models.CharField(_("bar_code"), max_length=50)
     weight = models.FloatField(_("weight"))
     length = models.FloatField(_("length"))
@@ -661,7 +661,7 @@ class Package(models.Model):
 
     class Meta:
         db_table = 'Package'
-        unique_together = ("driver", "order")
+        # unique_together = ("driver", "order")
 
 
 class Package_catalog(models.Model):
