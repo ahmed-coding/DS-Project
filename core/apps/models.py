@@ -222,7 +222,8 @@ class Region(models.Model):
     Point X come before Y like [X ,Y] -> Point(X, Y)
     """
     name = models.CharField(max_length=50, default='')
-    location = gis_models.PointField(null=True,)
+    longitude = models.CharField(_("longitude"), max_length=50)
+    latitude = models.CharField(_("latitude"), max_length=50)
 
     def __str__(self) -> str:
         return f"{self.name} - {self.location} "
@@ -647,7 +648,7 @@ class Rate(models.Model):
 
 class Package(models.Model):
     item_price = models.DecimalField(
-        _("item_price"), default=0.0,decimal_places=2, max_digits=16)
+        _("item_price"), default=0.0, decimal_places=2, max_digits=16)
     bar_code = models.CharField(_("bar_code"), max_length=50)
     weight = models.FloatField(_("weight"))
     length = models.FloatField(_("length"))
