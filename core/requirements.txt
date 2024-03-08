@@ -28,6 +28,7 @@ django-rest-framework==0.1.0
 django-user-agents==0.4.0
 djangorestframework==3.14.0
 djangorestframework-gis==1.0
+django-filter==23.5
 djangorestframework-simplejwt==5.3.0
 drf-spectacular==0.26.5
 facebook-sdk==3.1.0

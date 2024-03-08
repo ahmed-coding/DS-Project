@@ -4,6 +4,175 @@ info:
   version: 1.0.0
   description: Your project description
 paths:
+  /api/auth/check-email/:
+    post:
+      operationId: auth_check_email_create
+      description: |-
+        Chech Email View
+        Args:
+            ``email`` (string).
+        Returns:
+            is_valid: Boolen (True or False)
+            - if True mean it the Email is unuseable by any user
+            - else mean it the Email is alredy exsits.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChechEmailValidateSerilzers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChechEmailValidateSerilzers'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChechEmailValidateSerilzers'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChechEmailValidateSerilzers'
+          description: ''
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+          description: ''
+  /api/auth/send-verify-email/:
+    post:
+      operationId: auth_send_verify_email_create
+      description: |-
+        Args:
+            GenericAPIView (_type_): _description_
+
+        Returns:
+            _type_: _description_
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Verify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Verify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Verify'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Verify'
+          description: ''
+  /api/auth/sginup/:
+    post:
+      operationId: auth_sginup_create
+      description: |-
+        Reigster User View to signup after verify the ``email`` or ``phone number`` (just email for new).
+        Returns:
+        - in_Success:
+            - data: (``string``) -> message from server.
+            - user: (``User``) -> data of user after created.
+            - status_code : 200
+        - in_Fail:
+            - error: (``string``) -> Error Message.
+            - status: 401 when come bafore verify the ``email`` or ``phone_number``.
+            - status: 400 when data isn't correct or somthing go to by wrong.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAuth'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAuth'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAuth'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAuth'
+          description: ''
+  /api/auth/verify-email/:
+    post:
+      operationId: auth_verify_email_create
+      description: |-
+        Verify the Email end Check the code that will be sand if from ``Send Verify Email``.
+        if you try to sign up before send the code to here it will make error ``with status code 401``.
+
+        Args:
+        - code(intager): a given code from email.
+        ``- example: {'code': 0000}``.
+
+        Returns:
+        - is_valid:Boolen.
+        - in_Success:
+            - status: 200 .
+        - in_Fail:
+            - status: 401 when the given code not match with the sending code.
+            - status: 400 when data isn't correct or somthing go to by wrong.
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/schema/:
     get:
       operationId: schema_retrieve
@@ -151,6 +320,85 @@ paths:
                 additionalProperties: {}
           description: ''
 components:
+  schemas:
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+      - password
+      - token
+      - username
+    ChechEmailValidateSerilzers:
+      type: object
+      description: |-
+        Serializer for Chack if The Email is used by another user or not
+
+        Args:
+            email (``Email``): take email from request
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    UserAuth:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        phone_number:
+          type: string
+          nullable: true
+          maxLength: 50
+        username:
+          type: string
+          nullable: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+        name:
+          type: string
+          title: Full name
+          maxLength: 60
+        image:
+          type: string
+          format: uri
+          nullable: true
+        user_auth:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+      required:
+      - email
+      - id
+      - password
+      - user_auth
+    Verify:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
   securitySchemes:
     cookieAuth:
       type: apiKey
