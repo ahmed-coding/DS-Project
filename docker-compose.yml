@@ -3,13 +3,13 @@ version: '3.8'
 networks:
   DS:
 
+
 services:
   redis:
     image: redis:7.0.11-alpine
     container_name: ds-redis
     networks:
       - DS
-
 
   postgres:
     build:
@@ -21,45 +21,42 @@ services:
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: DS
     ports:
-      - "5435:5432"  # Map PostgreSQL port to host
+      - "5436:5432" # Map PostgreSQL port to host
     networks:
       - DS
-    command: ["postgres", "-c", "log_statement=all"]  # Optional: Enable statement logging
-
+    command: [ "postgres", "-c", "log_statement=all" ] # Optional: Enable statement logging
 
   coreapis:
     container_name: ds-coreAPIs
-    build: 
+    build:
       context: ./core
     command: python manage.py runserver 0.0.0.0:8001
     volumes:
       - ./core:/usr/src/app/ds-project/ds-core/
     ports:
-      - 8005:8001
+      - 8004:8001
     environment:
       - DEBUG=true
     depends_on:
       - redis
-      - postgres  # Add PostgreSQL as a dependency
+      - postgres # Add PostgreSQL as a dependency
     networks:
       - DS
 
-
   celery:
     container_name: ds-celery
-    build: 
+    build:
       context: ./core
     command: celery --app=core worker -l INFO -B
-    volumes:  
+    volumes:
       - ./core:/usr/src/app/ds-project/ds-core/
     environment:
       - DEBUG=true
     depends_on:
       - redis
-      - postgres  # Add PostgreSQL as a dependency
+      - postgres # Add PostgreSQL as a dependency
     networks:
       - DS
-
 
   # rabbitmq:
   #   image: rabbitmq:management
@@ -82,11 +79,11 @@ services:
 
   celeryworker:
     container_name: ds-celeryworker
-    build: 
+    build:
       context: ./celeryworker
       dockerfile: Dockerfile
     command: celery --app=celerytask worker -l INFO -B
-    volumes:  
+    volumes:
       - ./celeryworker:/usr/src/app/ds-project/ds-celeryworker/
     environment:
       - DEBUG=true
@@ -95,6 +92,6 @@ services:
     depends_on:
       - redis
       - coreapis
-      - postgres  # Add PostgreSQL as a dependency
+      - postgres # Add PostgreSQL as a dependency
     networks:
       - DS
