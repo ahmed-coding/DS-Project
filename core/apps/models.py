@@ -313,17 +313,17 @@ class Category(MPTTModel):
     def __str__(self):
         return f"name: {self.name} parent {self.parent} id {self.id} "
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
 
-        img = PImage.open(self.image.path)
+        # img = PImage.open(self.image.path)
 
         # Resize the image to the desired dimensions (200px width, 140px height)
-        output_size = (200, 140)
-        img.thumbnail(output_size)
+        # output_size = (200, 140)
+        # img.thumbnail(output_size)
 
-        # Save the resized image
-        img.save(self.image.path)
+        # # Save the resized image
+        # img.save(self.image.path)
 
     class Meta:
         db_table = 'Category'

@@ -173,6 +173,52 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/categorie/:
+    get:
+      operationId: categorie_list
+      parameters:
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - categorie
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCategorySerializersList'
+          description: ''
   /api/product/:
     get:
       operationId: product_list
@@ -203,6 +249,16 @@ paths:
         description: Number of results to return per page.
         schema:
           type: integer
+      - in: query
+        name: product_name
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
       tags:
       - product
       security:
@@ -247,74 +303,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SingleProduct'
-          description: ''
-  /api/product/create/:
-    post:
-      operationId: product_create_create
-      description: |-
-        _summary_
-
-        Args:
-            ListAPIView (_type_): _description_
-
-        Returns:
-            _type_: _description_
-      tags:
-      - product
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Diaa'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Diaa'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Diaa'
-        required: true
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      - jwtAuth: []
-      - {}
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Diaa'
-          description: ''
-  /api/product/store/{store_id}/:
-    get:
-      operationId: product_store_retrieve
-      description: |-
-        _summary_
-
-        Args:
-            ListAPIView (_type_): _description_
-
-        Returns:
-            _type_: _description_
-      parameters:
-      - in: path
-        name: store_id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - product
-      security:
-      - cookieAuth: []
-      - tokenAuth: []
-      - jwtAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Product'
           description: ''
   /api/product/sub-category/{id}/:
     get:
@@ -532,6 +520,53 @@ components:
       - password
       - token
       - username
+    CategorySerializers:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        image:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image_Serializers'
+          readOnly: true
+        have_children:
+          type: boolean
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        lft:
+          type: integer
+          readOnly: true
+        rght:
+          type: integer
+          readOnly: true
+        tree_id:
+          type: integer
+          readOnly: true
+        level:
+          type: integer
+          readOnly: true
+        parent:
+          type: integer
+          nullable: true
+        Promotions:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+      required:
+      - Promotions
+      - have_children
+      - id
+      - image
+      - level
+      - lft
+      - name
+      - rght
+      - tree_id
     ChechEmailValidateSerilzers:
       type: object
       description: |-
@@ -545,35 +580,6 @@ components:
           format: email
       required:
       - email
-    Diaa:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        slug:
-          type: string
-          readOnly: true
-          title: URL id
-          pattern: ^[-a-zA-Z0-9_]+$
-        product_name:
-          type: string
-          maxLength: 50
-        product_image:
-          type: string
-          format: uri
-          nullable: true
-        product_description:
-          type: string
-        category:
-          type: integer
-        brand:
-          type: integer
-          nullable: true
-      required:
-      - category
-      - id
-      - slug
     Image:
       type: object
       properties:
@@ -586,6 +592,34 @@ components:
       required:
       - id
       - image
+    Image_Serializers:
+      type: object
+      properties:
+        image:
+          type: string
+          format: uri
+      required:
+      - image
+    PaginatedCategorySerializersList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategorySerializers'
     PaginatedProductList:
       type: object
       properties:
