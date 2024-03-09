@@ -44,13 +44,13 @@ INSTALLED_APPS = [
     # internl apps
     'apps',
     # GIS and GeoDjango
-    'django.contrib.gis',  # For Test GIS
-    'rest_framework_gis',
+    # 'django.contrib.gis',  # For Test GIS
+    # 'rest_framework_gis',
     # external apps
     'corsheaders',
     'mptt',
     'rest_framework',
-    'user_agents',
+    # 'user_agents',
     # 'channels',
     'rest_framework.authtoken',
     # 'rest_framework_simplejwt.token_blacklist',
