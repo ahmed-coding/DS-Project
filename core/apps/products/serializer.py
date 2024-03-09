@@ -158,7 +158,7 @@ class SingleProductItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product_item
-        fields = ['id', 'comment_item', 'in_favorite',
+        fields = ['id', 'in_favorite',
                   'rating', 'stock', 'item_image', 'price', 'sku', 'slug']
 
 

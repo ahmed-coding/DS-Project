@@ -173,6 +173,201 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/product/:
+    get:
+      operationId: product_list
+      description: |-
+        _summary_
+
+        Args:
+            ListAPIView (_type_): _description_
+
+        Returns:
+            _type_: _description_
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - product
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductList'
+          description: ''
+  /api/product/{id}/:
+    get:
+      operationId: product_retrieve
+      description: |-
+        _summary_
+
+        Args:
+            ListAPIView (_type_): _description_
+
+        Returns:
+            _type_: _description_
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - product
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleProduct'
+          description: ''
+  /api/product/create/:
+    post:
+      operationId: product_create_create
+      description: |-
+        _summary_
+
+        Args:
+            ListAPIView (_type_): _description_
+
+        Returns:
+            _type_: _description_
+      tags:
+      - product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Diaa'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Diaa'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Diaa'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Diaa'
+          description: ''
+  /api/product/store/{store_id}/:
+    get:
+      operationId: product_store_retrieve
+      description: |-
+        _summary_
+
+        Args:
+            ListAPIView (_type_): _description_
+
+        Returns:
+            _type_: _description_
+      parameters:
+      - in: path
+        name: store_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - product
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
+  /api/product/sub-category/{id}/:
+    get:
+      operationId: product_sub_category_list
+      description: |-
+        _summary_
+
+        Args:
+            ListAPIView (_type_): _description_
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - product
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductList'
+          description: ''
   /api/schema/:
     get:
       operationId: schema_retrieve
@@ -350,6 +545,252 @@ components:
           format: email
       required:
       - email
+    Diaa:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          title: URL id
+          pattern: ^[-a-zA-Z0-9_]+$
+        product_name:
+          type: string
+          maxLength: 50
+        product_image:
+          type: string
+          format: uri
+          nullable: true
+        product_description:
+          type: string
+        category:
+          type: integer
+        brand:
+          type: integer
+          nullable: true
+      required:
+      - category
+      - id
+      - slug
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        image:
+          type: string
+          format: uri
+      required:
+      - id
+      - image
+    PaginatedProductList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product_item:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductItem'
+          readOnly: true
+        category:
+          type: string
+          readOnly: true
+        brand:
+          type: string
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          title: URL id
+          pattern: ^[-a-zA-Z0-9_]+$
+        product_name:
+          type: string
+          maxLength: 50
+        product_image:
+          type: string
+          format: uri
+          nullable: true
+        product_description:
+          type: string
+      required:
+      - brand
+      - category
+      - id
+      - product_item
+      - slug
+    ProductItem:
+      type: object
+      description: |-
+        _summary_
+
+        Args:
+            serializers (_type_): _description_
+
+        Returns:
+            _type_: _description_
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        item_image:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+          readOnly: true
+        rating:
+          type: number
+          format: double
+          readOnly: true
+        in_favorite:
+          type: boolean
+          readOnly: true
+        stock:
+          type: number
+          format: double
+          readOnly: true
+        price:
+          type: number
+          format: double
+        slug:
+          type: string
+          nullable: true
+          title: URL ID
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        sku:
+          type: string
+          format: uri
+          nullable: true
+        product:
+          type: integer
+      required:
+      - id
+      - in_favorite
+      - item_image
+      - price
+      - product
+      - rating
+      - stock
+    SingleProduct:
+      type: object
+      description: |-
+        SingleProductSerializer for main Product and has Products item
+
+        Args:
+            serializers (_type_): _description_
+
+        Returns:
+            _type_: _description_
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product_item:
+          type: array
+          items:
+            $ref: '#/components/schemas/SingleProductItem'
+          readOnly: true
+        category:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        brand:
+          type: string
+          readOnly: true
+        product_image:
+          type: string
+          format: uri
+        slug:
+          type: string
+          readOnly: true
+          title: URL id
+          pattern: ^[-a-zA-Z0-9_]+$
+        product_name:
+          type: string
+          maxLength: 50
+        product_description:
+          type: string
+      required:
+      - brand
+      - category
+      - id
+      - product_image
+      - product_item
+      - slug
+    SingleProductItem:
+      type: object
+      description: |-
+        Class Serializers for Single Products_item to get more datils
+
+
+        Args:
+            serializers (_type_): _description_
+
+        Returns:
+            _type_: _description_
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        in_favorite:
+          type: boolean
+          readOnly: true
+        rating:
+          type: number
+          format: double
+          readOnly: true
+        stock:
+          type: integer
+        item_image:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+          readOnly: true
+        price:
+          type: number
+          format: double
+        sku:
+          type: string
+          format: uri
+          nullable: true
+        slug:
+          type: string
+          nullable: true
+          title: URL ID
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+      required:
+      - id
+      - in_favorite
+      - item_image
+      - price
+      - rating
+      - stock
     UserAuth:
       type: object
       properties:

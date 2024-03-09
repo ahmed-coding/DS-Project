@@ -31,9 +31,12 @@ class ProductView(viewsets.ModelViewSet):
     """
     # permission_classes = [IsAuthenticatedOrReadOnly]
     # serializer_class = ProductSerializer
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend,
+                       filters.SearchFilter, filters.OrderingFilter]
     pagination_class = StandardResultsSetPagination
     ordering_fields = '__all__'
+    search_fields = ['product_name', ]
+    filterset_fields = ['product_name',]
     # lookup_field = 'pk'
     # lookup_url_kwarg = ['pk', 'store_id']
 
@@ -84,16 +87,6 @@ class ProductView(viewsets.ModelViewSet):
         #     self.request.user) if self.request.user.is_authenticated else None
         return obj
 
-    @action(detail=True, methods=['list'])
-    def get_store(self, request, store_id):
-        q = self.get_queryset().filter(store_id=store_id)[:100]
-        ser = self.get_serializer_class()
-        ser = ser(instance=q, many=True)
-
-        return Response({
-            'data': ser.data
-        })
-
     # def get_queryset(self):
     #     if self.action == 'get_store':
     #         return self.queryset.filter()
@@ -110,8 +103,8 @@ class ProductSubCategoryView(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend,
                        filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['name', ]
-    filterset_fields = ['name',]
+    search_fields = ['product_name', ]
+    filterset_fields = ['product_name',]
     ordering_fields = '__all__'
 
     def get(self, request, pk: int):
