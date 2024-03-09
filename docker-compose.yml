@@ -38,7 +38,6 @@ services:
     environment:
       - DEBUG=true
     depends_on:
-      - redis
       - postgres # Add PostgreSQL as a dependency
     networks:
       - DS
