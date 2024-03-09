@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
     'drf_spectacular',
+    'schema_graph',
+
 
 
 ]
@@ -169,6 +171,11 @@ STATICFILES_DIRS = [
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_ROOT = BASE_DIR / 'assets/'
+MEDIA_URL = 'media/'
+MEDIAFILES_DIRS = [
+    BASE_DIR / "../media",
+]
+MEDIA_ROOT = BASE_DIR / '../media'
 
 
 # Default primary key field type

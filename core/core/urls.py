@@ -20,11 +20,13 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
+from schema_graph.views import Schema
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('apps.urls')),
+    path('schema/', Schema.as_view()),
     path('api/schema/',
          SpectacularAPIView.as_view(), name='schema'),
     path('api/doc/',
