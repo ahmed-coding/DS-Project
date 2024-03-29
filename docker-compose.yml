@@ -3,7 +3,6 @@ version: '3.8'
 networks:
   DS:
 
-
 services:
 
   # redis:
@@ -15,18 +14,9 @@ services:
   postgres:
     # build:
     #   context: ./core
-    #   dockerfile: Dockerfile.postgis
+
+    #   dockerfile: postgres:14-alpine
     image: postgres:14-alpine
-    container_name: ds-postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: DS
-    ports:
-      - "5436:5432" # Map PostgreSQL port to host
-    networks:
-      - DS
-    command: [ "postgres", "-c", "log_statement=all" ]
 
   coreapis:
     container_name: ds-coreAPIs
